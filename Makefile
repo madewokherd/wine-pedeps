@@ -24,6 +24,12 @@ MINGW_TRIPLE_arm=armv7-w64-mingw32
 MINGW_TRIPLE_arm64=aarch64-w64-mingw32
 MINGW_TRIPLE=$(MINGW_TRIPLE_$(ARCH))
 
+ARCH_CFLAGS_arm=-mfloat-abi=soft
+ARCH_CFLAGS=$(ARCH_CFLAGS_$(ARCH))
+
+ARCH_CXXFLAGS_arm=-mfloat-abi=soft
+ARCH_CXXFLAGS=$(ARCH_CXXFLAGS_$(ARCH))
+
 WINE=wine
 
 FETCH_LLVM_MINGW_VERSION=20191230
@@ -69,7 +75,7 @@ SDL2_SRCDIR=$(SRCDIR_ABS)/SDL2
 # note: we explicitly disable vsscanf as msvcrt doesn't support it and mingw-w64's wrapper is buggy
 $(BUILDDIR)/SDL2/Makefile: $(SDL2_SRCDIR)/configure
 	mkdir -p $(@D)
-	cd $(@D); CC="$(MINGW)-gcc -static-libgcc" CXX="$(MINGW)-g++ -static-libgcc -static-libstdc++" $< --build=x86_64-pc-linux-gnu --target=$(MINGW_TRIPLE) --host=$(MINGW_TRIPLE) PKG_CONFIG=false ac_cv_func_vsscanf=no
+	cd $(@D); CC="$(MINGW)-gcc -static-libgcc $(ARCH_CFLAGS)" CXX="$(MINGW)-g++ -static-libgcc -static-libstdc++ $(ARCH_CXXFLAGS)" $< --build=x86_64-pc-linux-gnu --target=$(MINGW_TRIPLE) --host=$(MINGW_TRIPLE) PKG_CONFIG=false ac_cv_func_vsscanf=no
 
 $(BUILDDIR)/SDL2/.built: $(BUILDDIR)/SDL2/Makefile
 	+WINEPREFIX=/dev/null $(MAKE) -C $(@D)
