@@ -28,7 +28,7 @@
 #ifdef __ARM_NEON
 #define HAVE_NEON_INTRINSICS 1
 #ifdef __llvm__
-#include <arm-mve.h>
+#include <arm_neon.h>
 #endif
 #endif
 
