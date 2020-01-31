@@ -1,0 +1,18 @@
+FETCH_LLVM_MINGW_VERSION=20191230
+FETCH_LLVM_MINGW_DIRECTORY=llvm-mingw-$(FETCH_LLVM_MINGW_VERSION)-ubuntu-16.04
+
+FETCH_LLVM_MINGW_ARCHIVE=$(FETCH_LLVM_MINGW_DIRECTORY).tar.xz
+FETCH_LLVM_MINGW_URL=https://github.com/mstorsjo/llvm-mingw/releases/download/$(FETCH_LLVM_MINGW_VERSION)/$(FETCH_LLVM_MINGW_ARCHIVE)
+
+FETCH_LLVM_MINGW=$(SRCDIR_ABS)/$(FETCH_LLVM_MINGW_DIRECTORY)/bin/$(MINGW_TRIPLE_$(ARCH))
+
+# automatically fetching and extracting llvm-mingw
+
+$(SRCDIR)/$(FETCH_LLVM_MINGW_ARCHIVE): $(SRCDIR)/llvm.make
+	wget '$(FETCH_LLVM_MINGW_URL)' -O $@ --no-use-server-timestamps
+
+$(FETCH_LLVM_MINGW)-gcc: $(SRCDIR)/$(FETCH_LLVM_MINGW_ARCHIVE)
+	cd $(SRCDIR); tar xvmf $(FETCH_LLVM_MINGW_ARCHIVE)
+
+fetch-llvm: $(FETCH_LLVM_MINGW)-gcc
+.PHONY: fetch-llvm

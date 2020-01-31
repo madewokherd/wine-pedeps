@@ -32,14 +32,6 @@ ARCH_CXXFLAGS=$(ARCH_CXXFLAGS_$(ARCH))
 
 WINE=wine
 
-FETCH_LLVM_MINGW_VERSION=20191230
-FETCH_LLVM_MINGW_DIRECTORY=llvm-mingw-$(FETCH_LLVM_MINGW_VERSION)-ubuntu-16.04
-
-FETCH_LLVM_MINGW_ARCHIVE=$(FETCH_LLVM_MINGW_DIRECTORY).tar.xz
-FETCH_LLVM_MINGW_URL=https://github.com/mstorsjo/llvm-mingw/releases/download/$(FETCH_LLVM_MINGW_VERSION)/$(FETCH_LLVM_MINGW_ARCHIVE)
-
-FETCH_LLVM_MINGW=$(SRCDIR_ABS)/$(FETCH_LLVM_MINGW_DIRECTORY)/bin/$(MINGW_TRIPLE_$(ARCH))
-
 MINGW=$(FETCH_LLVM_MINGW)
 
 -include user-config.make
@@ -57,26 +49,7 @@ INCLUDEDIR_ABS=$(shell cd $(INCLUDEDIR); pwd)
 all:
 .PHONY: all
 
-# automatically fetching and extracting llvm-mingw
+include llvm.make
 
-$(SRCDIR)/$(FETCH_LLVM_MINGW_ARCHIVE):
-	wget '$(FETCH_LLVM_MINGW_URL)' -O $@
+include sdl2.make
 
-$(FETCH_LLVM_MINGW)-gcc: $(SRCDIR)/$(FETCH_LLVM_MINGW_ARCHIVE)
-	cd $(SRCDIR); tar xvf $(FETCH_LLVM_MINGW_ARCHIVE)
-
-fetch-llvm: $(FETCH_LLVM_MINGW)-gcc
-.PHONY: fetch-llvm
-
-# SDL2
-
-SDL2_SRCDIR=$(SRCDIR_ABS)/SDL2
-
-# note: we explicitly disable vsscanf as msvcrt doesn't support it and mingw-w64's wrapper is buggy
-$(BUILDDIR)/SDL2/Makefile: $(SDL2_SRCDIR)/configure
-	mkdir -p $(@D)
-	cd $(@D); CC="$(MINGW)-gcc -static-libgcc $(ARCH_CFLAGS)" CXX="$(MINGW)-g++ -static-libgcc -static-libstdc++ $(ARCH_CXXFLAGS)" $< --build=x86_64-pc-linux-gnu --target=$(MINGW_TRIPLE) --host=$(MINGW_TRIPLE) PKG_CONFIG=false ac_cv_func_vsscanf=no
-
-$(BUILDDIR)/SDL2/.built: $(BUILDDIR)/SDL2/Makefile
-	+WINEPREFIX=/dev/null $(MAKE) -C $(@D)
-	touch "$@"
