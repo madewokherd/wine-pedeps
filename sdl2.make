@@ -1,7 +1,9 @@
 SDL2_SRCDIR=$(SRCDIR_ABS)/SDL2
 
+# disabling dinput.h needed because llvm-mingw misses dinput8 lib but configure doesn't check
+# disabling hidapi because llvm-mingw arm64 misses a setupapi lib
 SDL2_ARCHCONFIG_arm=ac_cv_header_dinput_h=no
-SDL2_ARCHCONFIG_arm64=ac_cv_header_dinput_h=no
+SDL2_ARCHCONFIG_arm64=ac_cv_header_dinput_h=no --disable-hidapi
 SDL2_ARCHCONFIG=$(SDL2_ARCHCONFIG_$(ARCH))
 
 # we explicitly disable vsscanf as msvcrt doesn't support it and mingw-w64's wrapper is buggy

@@ -3650,7 +3650,10 @@ AS_HELP_STRING([--enable-render-d3d], [enable the Direct3D render driver [[defau
         else
             LIBUUID=-luuid
         fi
-        EXTRA_LDFLAGS="$EXTRA_LDFLAGS -luser32 -lgdi32 -lwinmm -limm32 -lole32 -loleaut32 -lshell32 -lsetupapi -lversion $LIBUUID -static-libgcc"
+        EXTRA_LDFLAGS="$EXTRA_LDFLAGS -luser32 -lgdi32 -lwinmm -limm32 -lole32 -loleaut32 -lshell32 -lversion $LIBUUID -static-libgcc"
+        if test x$hidapi_support = xyes; then
+            EXTRA_LDFLAGS="$EXTRA_LDFLAGS -lsetupapi"
+        fi
         # The Windows platform requires special setup
         VERSION_SOURCES="$srcdir/src/main/windows/*.rc"
         SDLMAIN_SOURCES="$srcdir/src/main/windows/*.c"
