@@ -5,7 +5,7 @@
 SRCDIR:=$(dir $(MAKEFILE_LIST))
 BUILDDIR=$(SRCDIR)/build-$(ARCH)
 IMAGEDIR=$(SRCDIR)/image-$(ARCH)
-LIBDIR=$(SRCDIR)/libs-$(ARCH)
+LIBDIR=$(SRCDIR)/lib-$(ARCH)
 INCLUDEDIR=$(SRCDIR)/include-$(ARCH)
 
 ifeq ($(shell test -d $(SRCDIR)/output && echo y),y)

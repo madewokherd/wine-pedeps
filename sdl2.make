@@ -19,4 +19,18 @@ $(IMAGEDIR)/SDL2.dll: $(BUILDDIR)/SDL2/.built
 	mkdir -p $(@D)
 	cp $(BUILDDIR)/SDL2/build/.libs/SDL2.dll $@
 
-all: $(IMAGEDIR)/SDL2.dll
+$(LIBDIR)/libSDL2.dll.a: $(BUILDDIR)/SDL2/.built
+	mkdir -p $(@D)
+	cp $(BUILDDIR)/SDL2/build/.libs/libSDL2.dll.a $@
+
+SDL2_LIB=$(LIBDIR_ABS)/libSDL2.dll.a
+
+$(INCLUDEDIR)/SDL_config.h: $(BUILDDIR)/SDL2/.built
+	mkdir -p $(@D)
+	cp $(SRCDIR)/SDL2/include/*.h $(@D)
+	cp $(BUILDDIR)/SDL2/include/*.h $(@D)
+
+sdl2: $(IMAGEDIR)/SDL2.dll $(LIBDIR)/libSDL2.dll.a $(INCLUDEDIR)/SDL_config.h
+.PHONY: sdl2
+
+all: sdl2
