@@ -49,7 +49,22 @@ INCLUDEDIR_ABS=$(shell cd $(INCLUDEDIR); pwd)
 all:
 .PHONY: all
 
+%-x86:
+	+$(MAKE) $* ARCH=x86
+
+%-x86_64:
+	+$(MAKE) $* ARCH=x86_64
+
+%-arm:
+	+$(MAKE) $* ARCH=arm
+
+%-arm64:
+	+$(MAKE) $* ARCH=arm64
+
 include llvm.make
+
+all-arches: $(MINGW)-gcc
+	+$(MAKE) all-x86 all-x86_64 all-arm all-arm64
 
 include sdl2.make
 
