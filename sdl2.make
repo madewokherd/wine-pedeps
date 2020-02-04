@@ -14,3 +14,9 @@ $(BUILDDIR)/SDL2/Makefile: $(SDL2_SRCDIR)/configure $(MINGW)-gcc $(SRCDIR)/sdl2.
 $(BUILDDIR)/SDL2/.built: $(BUILDDIR)/SDL2/Makefile
 	+WINEPREFIX=/dev/null $(MAKE) -C $(@D)
 	touch "$@"
+
+$(IMAGEDIR)/SDL2.dll: $(BUILDDIR)/SDL2/.built
+	mkdir -p $(@D)
+	cp $(BUILDDIR)/SDL2/build/.libs/SDL2.dll $@
+
+all: $(IMAGEDIR)/SDL2.dll
