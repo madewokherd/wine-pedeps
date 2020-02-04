@@ -1,0 +1,3 @@
+[submodule "FAudio"]
+	path = FAudio
+	url = git://github.com/FNA-XNA/FAudio.git
